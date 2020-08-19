@@ -1,6 +1,7 @@
 #importing necessary module
 from flask import Flask
 from flask import render_template
+from flask import url_for
 
 
 posts =[
@@ -30,7 +31,7 @@ def index():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html', title="About Us")
 
 
 

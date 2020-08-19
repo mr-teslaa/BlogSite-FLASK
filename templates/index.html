@@ -1,26 +1,27 @@
-<!DOCTYPE html>
+{% extends 'root.html' %}
 
 
-<html lang="en">
-
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title> Flask Blog </title>
-</head>
-
-
-<body>
+{% block content %}
 
     {% for post in posts %}
-        <h1> {{ post.title }} </h1>
-        <small> By {{ post.author }} on {{ post.date_posted }} </small>
-        <p> {{ post.content }} </p>
+    <article class="media content-section">
+
+        <div class="media-body">
+        
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ post.author }}</a>
+                <small class="text-muted">{{ post.date_posted }}</small>
+            </div>
+
+            <h2>
+                <a class="article-title" href="#"> {{ post.title }} </a>
+            </h2>
+
+            <p class="article-content"> {{ post.content }} </p>
+            
+        </div>
+
+    </article>
     {% endfor %}
 
-</body>
-
-
-</html>
+{% endblock %}
