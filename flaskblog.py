@@ -2,6 +2,8 @@
 from flask import Flask
 from flask import render_template
 from flask import url_for
+from flask import flash
+from flask import redirect
 
 #   import form class
 from forms import RegistrationForm
@@ -39,6 +41,9 @@ def index():
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('index'))
     return render_template('registar.html', form=form, title='Registration')
 
 #   login route
