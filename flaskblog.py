@@ -38,21 +38,24 @@ def index():
     return render_template('index.html', posts=posts)
 
 #   registration route
-@app.route('/registration', methods=['GET', 'POST'])
-def registration():
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('index'))
-    return render_template('registar.html', form=form, title='Registration')
+    return render_template('register.html', form=form, title='Registration')
 
 #   login route
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        flash(f'{form.username.data}, You have successfully login!', 'success')
-        return redirect(url_for('index'))
+        if form.email.data == 'admin@protonmail.com' and form.password.data == 'admin':
+            flash(f'You have successfully logegd in!', 'success') 
+            return redirect( url_for('index') )
+        else:
+            flash(f'Username or Password is incorrect!', 'danger')      
     return render_template('login.html', form=form, title='Login')
 
 #   about route
