@@ -5,9 +5,28 @@ from flask import url_for
 from flask import flash
 from flask import redirect
 
+#   importing database uri
+from flask_sqlalchemy import SQLAlchemy
+
 #   import form class
 from forms import RegistrationForm
 from forms import LoginForm
+
+#   creating class for database model
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=Flase)
+    email = db.Column(db.String(120), unique=True, nullable=Flase)
+    image_file = db.Column(db.String(20), nullable=Flase, deflault='default.jpg')
+    password = db.Column(db.String(60), nullable=Flase)
+
+    def __repr__(slef):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+
+class post
+
+    #   next day. code will be goes here
+
 
 posts =[
     {
@@ -30,6 +49,7 @@ app = Flask(__name__)
 
 #   generate a secret key for forms
 app.config['SECRET_KEY'] = '94692de71c05d2759ecc4bfd5d5ec4f0'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 #   default route
 @app.route('/')
