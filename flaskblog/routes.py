@@ -203,25 +203,23 @@ If you did not make this request then simply ignore this email and no changes wi
 '''
     mail.send(msg)
 
-#   create route for password reset
-@app.route('/reset_password', methods=['GET', 'POST'])
+
+@app.route("/reset_password", methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-
     form = RequestResetForm()
-    if form.validate_on_submit:
+    if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
-        flash('An email has been send with insturction to reset your password', 'info')
+        flash('An email has been sent with instructions to reset your password.', 'info')
         return redirect(url_for('login'))
-
     return render_template('reset_request.html', title='Reset Password', form=form)
 
 
 #   create route for token password reset
 @app.route('/reset_token/<token>', methods=['GET', 'POST'])
-def reset_token():
+def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('index'))
 
@@ -237,7 +235,7 @@ def reset_token():
         db.session.commit()
         flash('Your password is succesfully updated', 'success')
         return redirect(url_for('login'))
-    return render_template('reset_token', title='Reset Password', form=form)
+    return render_template('reset_token.html', title='Reset Password', form=form)
 
 
 
