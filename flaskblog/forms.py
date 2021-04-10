@@ -157,3 +157,52 @@ class PostForm(FlaskForm):
     )
 
     submit = SubmitField( 'Post' )
+
+
+
+#   create form for reset email link
+class RequestResetForm(FlaskForm):
+    email = StringField(
+        'Email',
+        validators = [
+            DataRequired(),
+            Email()
+        ]
+    )
+
+    submit = SubmitField( 'Request password reset link' )
+
+
+     #   check that email have aleady exits or not
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('We can not find any account with this email.')
+
+
+#   create form for reset password from email reset link
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(
+        'Password',
+        validators = [
+            DataRequired()
+        ]
+    )
+
+    confirm_password = PasswordField(
+        'Confirm Password',
+        validators = [
+            DataRequired(),
+            EqualTo('password')
+        ]
+    )
+
+    submit = SubmitField( 'Reset Password' )
+
+
+     #   check that email have aleady exits or not
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('We can not find any account with this email.')
+
