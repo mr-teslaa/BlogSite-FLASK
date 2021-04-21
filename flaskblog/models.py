@@ -1,11 +1,16 @@
+#   importing  necessary module
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
+
+#   importing dataase
 from flaskblog import db
+
+#   importing login manager
 from flaskblog import login_manager
-from flaskblog import app
 from flask_login import UserMixin
 
-
+#   making sure that the user is logged in
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -19,21 +24,20 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
 
+    #   generating the password reseting roken
     def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
-
-    #   telling the python that not to pass the self parameter and verify that the token is valid
+    #  verify the token if the token has exprired or invalid
     @staticmethod
     def verify_reset_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']
         except:
             return None
         return User.query.get(user_id)
-
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
