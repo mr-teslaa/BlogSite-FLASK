@@ -3,6 +3,7 @@
 
 {% block content %}
 
+    {% if posts.items %}
     {% for post in posts.items %}
     <article class="media content-section">
 
@@ -25,6 +26,12 @@
 
     </article>
     {% endfor %}
+    {% else %}
+    <main class="container text-center">
+        <p class="text-muted">No posts published</p>
+        <p>Create an account or login for get started</p>
+    </main>
+    {% endif %}   
 
     {% for page_num in posts.iter_pages( left_edge=2, right_edge=2, left_current=1, right_current=1 ) %}
         {% if page_num %}
