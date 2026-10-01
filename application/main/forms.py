@@ -77,36 +77,3 @@ class LoginForm(FlaskForm):
     login = SubmitField( 'Login' )
 
 
-
-# profie pic update form
-class ProfileUpdateForm(FlaskForm):
-
-    username = StringField(
-        'Username',
-        validators = [
-            DataRequired(),
-            Length(min=2, max=20)
-        ]
-    )
-
-    email = StringField(
-        'Email',
-        validators = [
-            DataRequired(),
-            Email()
-        ]
-    )
-
-    picture = FileField(
-        'Update Profile Picture',
-        validators = [
-            FileAllowed(
-                [
-                    'jpg',
-                    'png'
-                ]
-            )
-        ]
-    )
-
-    submit = SubmitField( 'Update' )

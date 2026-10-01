@@ -8,7 +8,24 @@
             
             <fieldset class="form-group">
             
-                <legend class="border-bottom mb-4"> Login </legend>
+                <legend class="border-bottom mb-4"> Join Today </legend>
+            
+                <div class="form-group">
+                    
+                    {{ form.username.label(class="form-control-label") }}
+
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span> {{ error }} </span>
+                            {% endfor %}
+                        </div> 
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg") }}
+                    {% endif %}
+
+                </div>
 
                 <div class="form-group">
                     
@@ -44,18 +61,26 @@
                     
                 </div>
 
-                <div class="form-check">
-                    {{ form.remember(class="form-check-input") }}
-                    {{ form.remember.label(class="form-check-label") }}
+                <div class="form-group">
+                    
+                    {{ form.confirm_password.label(class="form-control-label") }}
+                    
+                    {% if form.confirm_password.errors %}
+                        {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.confirm_password.errors %}
+                                <span> {{ error }} </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.confirm_password(class="form-control form-control-lg") }}
+                    {% endif %}
+                    
                 </div>
 
-                <div class="form-group mt-2">
-                    {{ form.login(class="btn btn-outline-info") }}
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
                 </div>
-
-                <small class="text-muted ml-2 m">
-                    <a href="#"> Forget Password? </a>
-                </small>
 
             </fieldset>
 
@@ -64,11 +89,9 @@
 
 
         <div class="border-top pt-3">
-
             <small class="text-muted">
-                Need an account? <a class="ml-2" href=" {{ url_for('registration') }} "> Signup Now </a>
+                Already have an account? <a class="ml-2" href=" {{ url_for('main.login') }} "> Signin </a>
             </small>
-
         </div>
 
     </div>
