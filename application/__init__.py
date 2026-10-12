@@ -25,7 +25,7 @@ login_manager = LoginManager()
 
 #   define which route is mendatory if we try to access any unauthorize page.
 #   in this case we are trying to access account page but before we access that page we must have to login first.
-login_manager.login_view = 'main.login' # 'login' is the route name
+login_manager.login_view = 'auth.login' # 'login' is the route name
 
 #   beautify the flash message in login page which is authenticate by flask_login
 login_manager.login_message_category = 'info' # 'info' is the bootstrap class name what will beautify our alert box
@@ -46,6 +46,14 @@ def create_app(config_class=Config):
 
     from application.main.views import main
     app.register_blueprint(main)
+
+    from application.auth.views import auth
+    app.register_blueprint(auth)
+
+    from application.posts.views import posts
+    app.register_blueprint(posts)
+
+
     # from flaskblog.posts.routes import posts
     # from flaskblog.errors.handlers import errors
     # app.register_blueprint(posts)
