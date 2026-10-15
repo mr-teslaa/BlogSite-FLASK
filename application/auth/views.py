@@ -19,6 +19,9 @@ from application.models import User
 from application.auth.forms import RegistrationForm
 from application.auth.forms import LoginForm
 
+# SMTP EMAIL SENDING MODULE
+from application.auth.email import send_activation_email
+
 #   creating blueprint
 auth = Blueprint('auth', __name__)
 
@@ -41,6 +44,10 @@ def registration():
         )
         db.session.add(user)
         db.session.commit()
+        
+        # SEND ACTIVATION EMAIL TO USER
+        send_activation_email(user)
+
         flash('User registered successfully', 'success')
         return redirect(url_for('auth.login'))
 
@@ -73,3 +80,25 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+
+# ACTIVATE TOKEN VAERIFY
+@auth.route('/activate/<token>')
+def activate(token):
+    # Activate a user's account
+    user = User.query.filter_by(activation_token=token).first()
+
+    if user.is_active == True:
+        flash('Your account is already active. Please login to continue', 'success')
+        return redirect(url_for('auth.login'))
+    
+    if user:
+        user_verified = user.verify_reset_token(token)
+        if user_verified:
+            user.is_active = True
+            db.session.commit()
+            flash('Your account has been activated! You are now able to log in', 'success')
+        return redirect(url_for('auth.login'))
+    else:
+        flash('The activation link is invalid or has expired.', 'warning')
+        return redirect(url_for('auth.join'))

@@ -1,10 +1,15 @@
 #   import module from login manager
+from datetime import datetime
+
+from flask import current_app
 from flask_login import UserMixin
 
 from application import login_manager
 from application import db
 
-from datetime import datetime
+from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
+
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -19,6 +24,40 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+
+    # ACCOUNT ACTIVATION
+    activation_token = db.Column(db.String(500), unique=True)
+    
+    # GENERATE ACTIVATION TOKEN
+    def generate_activation_token(self, expires_sec=3600):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        return s.dumps({'user_id': self.id})
+
+
+    # GENERATE PASSWORD RESET TOKEN
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        return s.dumps({'user_id': self.id})
+
+    @staticmethod
+    def verify_reset_token(token, expires_sec=1800):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token, max_age=expires_sec)['user_id']
+        except Exception:
+            return None
+        return User.query.get(user_id)
+
+
+    @staticmethod
+    def verify_activation_token(token, expires_sec=3600):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token, max_age=expires_sec)['user_id']
+        except Exception:
+            return None
+        return User.query.get(user_id)
+
 
     def __repr__(self):
         return f"User('{self.username}')"
