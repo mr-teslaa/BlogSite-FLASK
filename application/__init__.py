@@ -56,10 +56,7 @@ def create_app(config_class=Config):
     from application.posts.views import posts
     app.register_blueprint(posts)
 
-
-    # from flaskblog.posts.routes import posts
-    # from flaskblog.errors.handlers import errors
-    # app.register_blueprint(posts)
-    # app.register_blueprint(errors)
+    from application.errors.handlers import errors
+    app.register_blueprint(errors)
 
     return app

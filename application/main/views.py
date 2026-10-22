@@ -44,9 +44,15 @@ main = Blueprint('main', __name__)
 @main.route('/')
 @main.route('/home')
 def index():
-    posts = Post.query.all()
-    print('---- posts ----')
-    print(posts)
+    # posts = Post.query.all()
+    # print('---- posts ----')
+    # print(len(posts))
+
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=2)
+    # print('posts: ')
+    # for post in posts:
+    #     print(post.title)
     return render_template('index.html', posts=posts)
 
 @main.route('/about')
